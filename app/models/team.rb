@@ -57,16 +57,14 @@ class Team < ActiveRecord::Base
     matches_array = Match.where(team_id: self.id)
     matches_array.select do |match|
       match.win == true
-    end
-    matches_array.length
+    end.length
   end
 
   def team_losses
     matches_array = Match.where(team_id: self.id)
     matches_array.select do |match|
       match.win == false
-    end
-    matches_array.length
+    end.length
   end
 
   def team_record
@@ -98,58 +96,80 @@ class Team < ActiveRecord::Base
   end
 
 
+#CLASS METHODS-----------------------------------------
+
+def self.team_with_most_goals
+  team = self.all.max_by { |team| team.team_goals }
+  array = self.all.select do |element|
+    element.team_goals == team.team_goals
+  end
+  array2 = array.map do |element|
+    element.country
+  end
+  array2.join(', ')
 end
 
+def self.team_with_least_goals
+  team = self.all.min_by { |team| team.team_goals }
+  array = self.all.select do |element|
+    element.team_goals == team.team_goals
+  end
+  array2 = array.map do |element|
+    element.country
+  end
+  array2.join(', ')
+end
 
-#
-# #CLASS METHODS-------------------------------------------------------
-#   def self.team_with_most_goals
-#   end
-#
-#   def self.team_with_least_goals
-#   end
-#
-#   def self.team_with_most_goals_scored_on
-#   end
-#
-#   def self.team_with_least_goals_scored_on
-#   end
-#
-#   def self.team_with_highest_point_differential
-#   end
-#
-#   def self.team_with_lowest_point_differential
-#   end
-#
-#   def self.team_with_most_wins
-#   end
-#
-#   def team_with_most_losses
-#   end
+def self.team_with_most_goals_scored_on
+  team = self.all.max_by { |team| team.team_goals_scored_on }
+  array = self.all.select do |element|
+    element.team_goals_scored_on == team.team_goals_scored_on
+  end
+  array2 = array.map do |element|
+    element.country
+  end
+  array2.join(', ')
+end
 
+def self.team_with_least_goals_scored_on
+  team = self.all.min_by { |team| team.team_goals_scored_on }
+  array = self.all.select do |element|
+    element.team_goals_scored_on == team.team_goals_scored_on
+  end
+  array2 = array.map do |element|
+    element.country
+  end
+  array2.join(', ')
+end
 
-  # def home_or_away
-  #   self
-  #
-  # def team_goals
-  #   total_goals = 0
-  #
-  #   team_goals_helper.map do |score|
-  #     array = score.split(" - ")
-  #     if self
+def self.team_with_highest_point_differential
+  team = self.all.max_by { |team| team.team_point_differential }
+  array = self.all.select do |element|
+    element.team_point_differential == team.team_point_differential
+  end
+  array2 = array.map do |element|
+    element.country
+  end
+  array2.join(', ')
+end
 
+def self.team_with_lowest_point_differential
+  team = self.all.min_by { |team| team.team_point_differential }
+  array = self.all.select do |element|
+    element.team_goals_scored_on == team.team_goals_scored_on
+  end
+  array2 = array.map do |element|
+    element.country
+  end
+  array2.join(', ')
+end
 
+def self.team_with_most_wins
+  self.all.max_by { |team| team.team_wins }
+end
 
+def team_with_most_losses
+  self.all.min_by { |team| team.team_losses }
+end
 
-
-# class CreateTeams < ActiveRecord::Migration[5.2]
-#   def change
-#     create_table :teams do |t|
-#       t.string :country
-#       t.integer :fifa_id
-#       t.string :fifa_code
-#       t.integer :group_id
-#       t.string :group_letter
-#     end
-#   end
-# end
+end

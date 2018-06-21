@@ -1,6 +1,4 @@
-require 'nokogiri'
-require 'open-uri'
-require 'pry'
+
 
 html = open("https://www.fifa.com/worldcup/players/browser/")
 

@@ -2,20 +2,17 @@
 
 def welcome
   puts "Welcome to Fifa World Cup 2018!"
+  puts "We provide real-time, accurate information for passionate fans!"
 end
 
 def prompt_user
-  puts "We provide real-time, accurate information for passionate fans!"
-  puts "Would you like to know information regarding a Team or Stadium?"
+  puts "Would you like to know information regarding a Team, a Stadium or the Tournament?"
   puts "Enter help for more guidance."
 end
 
-
-# COME BACK TO!!!
-
-
 def get_user_input
-  hello = gets.chomp
+  hello_1 = gets.chomp
+  hello = hello_1.downcase
 end
 
 def invalid_command
@@ -52,10 +49,39 @@ end
 #TEAM---------------------------------------
 
 def get_team
+    puts
     puts "Which team are you interested in?"
     name = gets.chomp
 end
 
+def decision
+  puts
+  puts "Would you like Match Specific or Aggregated information?"
+  decis1 = gets.chomp
+  decis = decis1.downcase
+end
+
+
+def match_information(name)
+  team_object = Team.find_by(country: name)
+  array = team_object.matches
+  counter = 1
+  puts
+  array.map do |element|
+    puts "Match #{counter}"
+    if element.win == true
+      puts "Result : WIN"
+    else
+      puts "Result : LOSS"
+    end
+    puts "Opponent : #{element.opponent}"
+    puts "Score : #{element.score}"
+    stadium = Stadium.find_by(:id => element.stadium_id)
+    puts "Stadium : #{stadium.name}"
+    puts
+    counter += 1
+  end
+end
 
 def team_attribute_finder(name)
   team_object = Team.find_by(country: name)
@@ -78,12 +104,38 @@ def team_attribute_finder(name)
   - opponents : #{opponents}
   - stadiums : #{stadiums}
   - group : #{group}
+
   OPTIONS
 
   puts options
 
 end
 
+#TOURNAMENT---------------------------------
+
+def tournament_info
+  most_goals = Team.team_with_most_goals
+  least_goals = Team.team_with_least_goals
+  most_against = Team.team_with_most_goals_scored_on
+  least_against = Team.team_with_least_goals_scored_on
+  highest_diff = Team.team_with_highest_point_differential
+  lowest_diff = Team.team_with_lowest_point_differential
+
+  options = <<-HELLO
+
+  - most goals scored : #{most_goals}
+  - least goals scored against : #{least_against}
+  - highest point differential : #{highest_diff}
+
+  - least goals scored : #{least_goals}
+  - most goals scored against : #{most_against}
+  - lowest point differential : #{lowest_diff}
+
+  HELLO
+
+  puts options
+
+end
 
 #STADIUM------------------------------------
 
@@ -92,19 +144,31 @@ def get_stadium
   name = gets.chomp
 end
 
-def stadium_search
-   options = <<-OPTIONS
-  Here is what you can search for:
-  - matches : displays all the matches at your stadium
-  - teams : displays all the teams who played at your stadium
-  - exit : exits this program
-
-  Please enter one of the above!
-
- OPTIONS
-
-   puts options
+def stadium_information(name)
+  stadium_object = Stadium.find_by(name: name)
+  puts
+  puts "City : #{stadium_object.city}"
+  puts
+  puts "Bellow is list of all the matches playes at this stadium!"
+  array = stadium_object.matches
+  array2 = array.select do |element|
+    element.home_or_away == "home"
   end
+  counter = 1
+  puts
+  array2.map do |element|
+    puts "Match #{counter}"
+    team_object = Team.find_by(id: element.team_id)
+    team = team_object.country
+    puts "#{team} VS #{element.opponent}"
+    puts "Score : #{element.score}"
+    puts
+    counter += 1
+  end
+end
+
+
+
 
 
 #RUNNER METHOD-------------------------------
@@ -121,11 +185,17 @@ def runner
     # answer = get_user_input
   when 'team'
     name = get_team
-    team_attribute_finder(name)
+    decis = decision
+    if decis == 'aggregated'
+      team_attribute_finder(name)
+    elsif decis == 'match specific'
+      match_information(name)
+    end
   when 'stadium'
-    get_stadium
-    stadium_search
-    stadium_attribute_finder
+    name = get_stadium
+    stadium_information(name)
+  when 'tournament'
+    tournament_info
   when 'exit'
     exit_program
     break
@@ -135,11 +205,3 @@ def runner
   prompt_user
 end
 end
-
-
-
-
-#team search: can return all matches, stadiums, total goals, total wins, total losses, goals scored on, point differential, players, opponents, group letter
-#stadium search: can return all matches and teams which played there.  plus stadium name & city
-#player search: can return ...
-#can we look up matches?  if so, the home team, away team, stadium, score
