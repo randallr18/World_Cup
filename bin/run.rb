@@ -1,8 +1,6 @@
 #!usr/bin/env ruby
 
-require 'pry'
-require 'active_record'
-require 'sinatra/activerecord'
+
 require_relative '../config/environment'
 require_relative '../app/models/stadium.rb'
 require_relative '../app/models/team.rb'
