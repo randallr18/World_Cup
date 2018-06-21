@@ -6,12 +6,16 @@ end
 
 def prompt_user
   puts "We provide real-time, accurate information for passionate fans!"
-  puts "Would you like to know information reagarding a Team, Player or Stadium?"
+  puts "Would you like to know information regarding a Team or Stadium?"
   puts "Enter help for more guidance."
 end
 
+
+# COME BACK TO!!!
+
+
 def get_user_input
-  gets.downcase.chomp
+  hello = gets.chomp
 end
 
 def invalid_command
@@ -24,13 +28,16 @@ end
 #help command : output instructions on methods they can use
 #exit command : The program should say goodbye and shut down
 
-def help
+def helper
   help = <<-HELP
   I accept the following commands:
   - help : displays this help message
   - team : displays a list of all teams you can search
   - stadium : displays a list of all stadiums you can search
   - exit : exits this program
+
+  Please enter one of the above!
+
   HELP
 
   puts help
@@ -49,50 +56,34 @@ def get_team
     name = gets.chomp
 end
 
-def team_search
-  options = <<-OPTIONS
-  Here is what you can search for:
-  - goals : displays total goals for your team
-  - goals scored on : displays total goals for your team
-  - point differential : displays the current point differential for your team
-  - stadiums : displays a list of all stadiums your team has played at
-  - wins : displays the total number of wins for your team
-  - losses : displays the total number of losses for your team
-  - matches : displays all the matches your team has played
-  - opponents : displays all the opponents your team has played
-  - exit : exits this program
-  OPTIONS
-
-  puts options
-end
 
 def team_attribute_finder(name)
   team_object = Team.find_by(country: name)
 
-  attribute = gets.downcase.chomp
-  case attribute
-  when 'goals'
-    #name.team_goals
-  when 'goals scored on'
-    #name.team_goals_scored_on
-  when 'point differential'
-    #name.team_point_differential
-  when 'stadiums'
-    #name.team_stadiums
-  when 'wins'
-    #name.team_wins
-  when 'losses'
-    #name.team_losses
-  when 'matches'
-    #name.team_matches
-  when 'opponents'
-    #name.team_opponents
-  when 'exit'
-    exit_program
-  else
-    invalid_command
-  end
+  total_goals = team_object.team_goals
+  goals_against = team_object.team_goals_scored_on
+  point_diff = team_object.team_point_differential
+  record = team_object.team_record
+  opponents = team_object.team_opponents
+  stadiums = team_object.team_stadiums
+  group = team_object.team_group
+
+  options = <<-OPTIONS
+  Aggregated Statistics for #{name}
+
+  - goals : #{total_goals}!
+  - goals scored on : #{goals_against}
+  - point differential : #{point_diff}
+  - record : #{record}
+  - opponents : #{opponents}
+  - stadiums : #{stadiums}
+  - group : #{group}
+  OPTIONS
+
+  puts options
+
 end
+
 
 #STADIUM------------------------------------
 
@@ -107,6 +98,9 @@ def stadium_search
   - matches : displays all the matches at your stadium
   - teams : displays all the teams who played at your stadium
   - exit : exits this program
+
+  Please enter one of the above!
+
  OPTIONS
 
    puts options
@@ -118,29 +112,31 @@ def stadium_search
 def runner
   welcome
   prompt_user
+
+  loop do
   answer = get_user_input
   case answer
   when 'help'
-    help
+    helper
+    # answer = get_user_input
   when 'team'
     name = get_team
-    team_search
     team_attribute_finder(name)
   when 'stadium'
     get_stadium
     stadium_search
     stadium_attribute_finder
-  when 'player'
-    get_player
-    player_search
-    player_attribute_finder
   when 'exit'
     exit_program
     break
   else
     invalid_command
   end
+  prompt_user
 end
+end
+
+
 
 
 #team search: can return all matches, stadiums, total goals, total wins, total losses, goals scored on, point differential, players, opponents, group letter

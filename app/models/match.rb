@@ -20,7 +20,7 @@ class Match < ActiveRecord::Base
       end
       score_var = self.score(match)
       opponent_var = self.opponent_hometeam(match)
-      home_team_hash = {stadium_id: stadium_id_var, team_id: team_id_var, win: win_var, score: score_var, opponent: opponent_var}
+      home_team_hash = {stadium_id: stadium_id_var, team_id: team_id_var, win: win_var, score: score_var, opponent: opponent_var, home_or_away: 'home'}
       self.create(home_team_hash)
     end
   end
@@ -76,7 +76,7 @@ class Match < ActiveRecord::Base
       end
       score_var = self.score(match)
       opponent_var = self.opponent_awayteam(match)
-      away_team_hash = {stadium_id: stadium_id_var, team_id: team_id_var, win: win_var, score: score_var, opponent: opponent_var}
+      away_team_hash = {stadium_id: stadium_id_var, team_id: team_id_var, win: win_var, score: score_var, opponent: opponent_var, home_or_away: 'away'}
       self.create(away_team_hash)
     end
   end
