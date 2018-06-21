@@ -19,6 +19,26 @@ class Stadium < ActiveRecord::Base
   end
 end
 
+#INSTANCE METHODS------------------------
+
+  def matches(stadium)
+  end 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # class CreateStadiums < ActiveRecord::Migration[5.2]
 #   def change
