@@ -23,45 +23,10 @@ def prompt_user_02
 end
 
 
-
-# def prompt_user
-#   puts "Would you like to know information regarding a Team, a Stadium or the Tournament?"
-#   puts "Enter help for more guidance."
-# end
-
-# def get_user_input
-#   hello_1 = gets.chomp
-#   hello = hello_1.downcase
-# end
-
-# def invalid_command
-#   puts "Please enter a valid command."
-#   prompt_user
-# end
-
-
-#COMMAND METHODS---------------------------
-#help command : output instructions on methods they can use
-#exit command : The program should say goodbye and shut down
-
-# def helper
-#   help = <<-HELP
-#   I accept the following commands:
-#   - help : displays this help message
-#   - team : displays a list of all teams you can search
-#   - stadium : displays a list of all stadiums you can search
-#   - exit : exits this program
-#
-#   Please enter one of the above!
-#
-#   HELP
-#
-#   puts help
-# end
-
-
 def exit_program
+  puts
   puts "Thank you for visiting! Goodbye!"
+  puts
 end
 
 
@@ -73,12 +38,6 @@ def get_team
     name = gets.chomp
 end
 
-def decision
-  puts
-  puts "Would you like Match Specific or Aggregated information?"
-  decis1 = gets.chomp
-  decis = decis1.downcase
-end
 
 def decision_02
   prompt = TTY::Prompt.new
@@ -99,7 +58,7 @@ def match_information(name)
     puts "Match #{counter}"
     if element.win == true
       puts "Result : WIN"
-    else
+    elsif element.win == false
       puts "Result : LOSS"
     end
     puts "Opponent : #{element.opponent}"
@@ -141,35 +100,27 @@ end
 
 #TOURNAMENT---------------------------------
 
-def tournament_info
-  most_goals = Team.team_with_most_goals
-  least_goals = Team.team_with_least_goals
-  most_against = Team.team_with_most_goals_scored_on
-  least_against = Team.team_with_least_goals_scored_on
-  highest_diff = Team.team_with_highest_point_differential
-  lowest_diff = Team.team_with_lowest_point_differential
-
-  options = <<-HELLO
-
-  - most goals scored : #{most_goals}
-  - least goals scored against : #{least_against}
-  - highest point differential : #{highest_diff}
-
-  - least goals scored : #{least_goals}
-  - most goals scored against : #{most_against}
-  - lowest point differential : #{lowest_diff}
-
-  HELLO
-
-  puts options
-
+def tournament_info_02
+  prompt = TTY::Prompt.new
+  decis1 = prompt.select("Please select one from the following!") do |menu|
+    menu.choice 'Most Goals Scored'
+    menu.choice 'Least Goals Scored'
+    menu.choice 'Least Goals Scored Against'
+    menu.choice 'Most Goals Scored Against'
+    menu.choice 'Highest Point Differential'
+    menu.choice 'Lowest Point Differential'
+  end
 end
 
 #STADIUM------------------------------------
 
-def get_stadium
-  puts "Which stadium are you interested in?"
-  name = gets.chomp
+def get_stadium_2
+  prompt = TTY::Prompt.new
+  prompt.select("Which stadium are you interested in?") do |menu|
+    Stadium.all.map do |element|
+    menu.choice(element.name)
+  end
+  end
 end
 
 def stadium_information(name)
@@ -203,33 +154,63 @@ end
 
 def runner
   welcome
-  # prompt_user
 
-  loop do
-  answer = prompt_user_02
-  case answer
-  when 'help'
-    helper
-    # answer = get_user_input
-  when 'team'
-    name = get_team
-    decis = decision_02
-    if decis == 'aggregated'
-      team_attribute_finder(name)
-    elsif decis == 'match specific'
-      match_information(name)
+    loop do
+      answer = prompt_user_02
+      case answer
+      when 'team'
+        loop do
+          @name = get_team
+          team_object = Team.find_by(country: @name)
+          if Team.all.index(team_object) == nil
+            puts
+            puts "Make sure to capitalize!"
+            puts "Please try again!"
+          else
+            break
+          end
+        end
+      decis = decision_02
+      if decis == 'aggregated'
+        team_attribute_finder(@name)
+      elsif decis == 'match specific'
+        match_information(@name)
+      end
+    when 'stadium'
+      name = get_stadium_2
+      stadium_information(name)
+    when 'tournament'
+      info = tournament_info_02
+      if info == 'Most Goals Scored'
+        puts
+        puts Team.team_with_most_goals
+        puts
+      elsif info == 'Least Goals Scored'
+        puts
+        puts Team.team_with_least_goals
+        puts
+      elsif info == 'Most Goals Scored Against'
+        puts
+        puts Team.team_with_most_goals_scored_on
+        puts
+      elsif info == 'Least Goals Scored Against'
+        puts
+        puts Team.team_with_least_goals_scored_on
+        puts
+      elsif info == 'Highest Point Differential'
+        puts
+        puts Team.team_with_highest_point_differential
+        puts
+      elsif info == 'Lowest Point Differential'
+        puts
+        puts Team.team_with_lowest_point_differential
+        puts
+      end
+      when 'exit'
+        exit_program
+        break
+      else
+        invalid_command
+      end
     end
-  when 'stadium'
-    name = get_stadium
-    stadium_information(name)
-  when 'tournament'
-    tournament_info
-  when 'exit'
-    exit_program
-    break
-  else
-    invalid_command
-  end
-  # prompt_user
-end
 end
