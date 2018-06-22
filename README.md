@@ -17,8 +17,8 @@ For smooth use of the World Cup 2018 Application, be sure to follow the instruct
 
 ## Contributers
 
-Risher Randall:https://github.com/randallr18
-Mary-Kate James:https://github.com/marykatj 
+Risher Randall:  https://github.com/randallr18
+Mary-Kate James: https://github.com/marykatj 
 
 ## License
 
