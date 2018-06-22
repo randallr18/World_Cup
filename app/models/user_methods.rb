@@ -1,44 +1,63 @@
 #HELPER METHODS------------------------
 
 def welcome
+  puts <<-TITLE
+
+███████╗██╗███████╗ █████╗     ██╗    ██╗ ██████╗ ██████╗ ██╗     ██████╗      ██████╗██╗   ██╗██████╗
+██╔════╝██║██╔════╝██╔══██╗    ██║    ██║██╔═══██╗██╔══██╗██║     ██╔══██╗    ██╔════╝██║   ██║██╔══██╗
+█████╗  ██║█████╗  ███████║    ██║ █╗ ██║██║   ██║██████╔╝██║     ██║  ██║    ██║     ██║   ██║██████╔╝
+██╔══╝  ██║██╔══╝  ██╔══██║    ██║███╗██║██║   ██║██╔══██╗██║     ██║  ██║    ██║     ██║   ██║██╔═══╝
+██║     ██║██║     ██║  ██║    ╚███╔███╔╝╚██████╔╝██║  ██║███████╗██████╔╝    ╚██████╗╚██████╔╝██║
+╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝     ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═════╝      ╚═════╝ ╚═════╝ ╚═╝
+
+
+  TITLE
   puts "Welcome to Fifa World Cup 2018!"
   puts "We provide real-time, accurate information for passionate fans!"
 end
 
-def prompt_user
-  puts "Would you like to know information regarding a Team, a Stadium or the Tournament?"
-  puts "Enter help for more guidance."
+def prompt_user_02
+  prompt = TTY::Prompt.new
+  answer = prompt.select("Would you like to know information regarding a Team, a Stadium or the Tournament?", %w(Team Stadium Tournament Exit))
+  answer.downcase
 end
 
-def get_user_input
-  hello_1 = gets.chomp
-  hello = hello_1.downcase
-end
 
-def invalid_command
-  puts "Please enter a valid command."
-  prompt_user
-end
+
+# def prompt_user
+#   puts "Would you like to know information regarding a Team, a Stadium or the Tournament?"
+#   puts "Enter help for more guidance."
+# end
+
+# def get_user_input
+#   hello_1 = gets.chomp
+#   hello = hello_1.downcase
+# end
+
+# def invalid_command
+#   puts "Please enter a valid command."
+#   prompt_user
+# end
 
 
 #COMMAND METHODS---------------------------
 #help command : output instructions on methods they can use
 #exit command : The program should say goodbye and shut down
 
-def helper
-  help = <<-HELP
-  I accept the following commands:
-  - help : displays this help message
-  - team : displays a list of all teams you can search
-  - stadium : displays a list of all stadiums you can search
-  - exit : exits this program
-
-  Please enter one of the above!
-
-  HELP
-
-  puts help
-end
+# def helper
+#   help = <<-HELP
+#   I accept the following commands:
+#   - help : displays this help message
+#   - team : displays a list of all teams you can search
+#   - stadium : displays a list of all stadiums you can search
+#   - exit : exits this program
+#
+#   Please enter one of the above!
+#
+#   HELP
+#
+#   puts help
+# end
 
 
 def exit_program
@@ -58,6 +77,15 @@ def decision
   puts
   puts "Would you like Match Specific or Aggregated information?"
   decis1 = gets.chomp
+  decis = decis1.downcase
+end
+
+def decision_02
+  prompt = TTY::Prompt.new
+  decis1 = prompt.select("Would you like Match Specific or Aggregated information?") do |menu|
+    menu.choice 'Match Specific'
+    menu.choice 'Aggregated'
+  end
   decis = decis1.downcase
 end
 
@@ -175,17 +203,17 @@ end
 
 def runner
   welcome
-  prompt_user
+  # prompt_user
 
   loop do
-  answer = get_user_input
+  answer = prompt_user_02
   case answer
   when 'help'
     helper
     # answer = get_user_input
   when 'team'
     name = get_team
-    decis = decision
+    decis = decision_02
     if decis == 'aggregated'
       team_attribute_finder(name)
     elsif decis == 'match specific'
@@ -202,6 +230,6 @@ def runner
   else
     invalid_command
   end
-  prompt_user
+  # prompt_user
 end
 end
