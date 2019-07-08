@@ -1,6 +1,7 @@
 #!usr/bin/env ruby
 
 
+
 require_relative '../config/environment'
 require_relative '../app/models/stadium.rb'
 require_relative '../app/models/team.rb'
